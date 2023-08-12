@@ -108,7 +108,7 @@ func (vm *VirtualMachine) Run(ctx context.Context) (err error) {
 	vm.activeFrame = &vm.frames[vm.fp]
 	vm.activeFrame.ActivateCode(vm.main)
 	vm.activeCode = vm.main
-	ctx = object.WithCallFunc(ctx, vm.callFunction)
+	ctx = object.WithCallFunc(ctx, vm.CallFunction)
 	ctx = object.WithCodeFunc(ctx, vm.codeFunction)
 	ctx = limits.WithLimits(ctx, vm.limits)
 	err = vm.eval(ctx)
@@ -614,7 +614,7 @@ func (vm *VirtualMachine) codeFunction(ctx context.Context) (*object.Code, error
 
 // Calls a compiled function with the given arguments. This is used internally
 // when a Risor object calls a function, e.g. [1, 2, 3].map(func(x) { x + 1 }).
-func (vm *VirtualMachine) callFunction(ctx context.Context, fn *object.Function, args []object.Object) (object.Object, error) {
+func (vm *VirtualMachine) CallFunction(ctx context.Context, fn *object.Function, args []object.Object) (object.Object, error) {
 	baseFrame := vm.fp
 	baseIP := vm.ip
 	// Advance to the next frame
